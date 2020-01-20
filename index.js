@@ -37,3 +37,57 @@ function userInput() {
     },
   ])
 }
+function generateHTML(answers, userData, gsData) {
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <title>Document</title>
+        <style>
+        .jumbotron {
+            color: ${answers.color};
+            background: white;
+            text-align: center;
+        }
+        img{
+            box-shadow:0px 0px 50px 30px ${answers.shadow};
+            border-radius: 50%;
+        }
+        h1, p, h2, h3{
+          color: ${answers.color};
+            text-shadow:2px 2px 5px black;
+        }
+    </style>
+    </head>
+    <body>
+        
+        <div class="jumbotron">
+        <img src="${userData.githubPic}" class="rounded-circle mx-auto d-block mb-5" alt="${userData.githubName}s's picture">
+            <h1 class="display-4">${userData.githubName}</h1>
+            <p class="lead">I'm from ${userData.githubLocation}.</p>
+            <h3 class="lead">${userData.githubBio}</h3>
+            <h2 class="lead">Number of github repos: ${userData.githubRepos}</h2>
+            <h2 class="lead">Number of github followers: ${userData.githubFollowers}</h2>
+            <h2 class="lead">Number of github following: ${gsData.following}</h2>
+            <h2 class="lead">Number of github stars: ${gsData.stars}</h2>
+            
+            <hr class="my-4">
+            <p>Here are the ways you can reach me.</p>
+            <a class="btn btn-primary btn-lg" href="https://www.google.com/maps/place/${userData.githubLocation}/" role="button" target="blank">Location</a>
+            <a class="btn btn-primary btn-lg" href="${userData.githubURL}" role="button" target="blank">github</a>
+            <a class="btn btn-primary btn-lg" href="${userData.githubBlog}" role="button" target="blank">Blog</a>
+          </div>
+    
+    
+    
+    
+    
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    </body>
+    </html>`
