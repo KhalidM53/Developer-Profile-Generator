@@ -16,24 +16,17 @@ function userInput() {
       name: "username"
     },
     {
-      type: "list",
-      message: "What color would you like for text??",
+      type: "input",
+      message: "Whats your favorite color?",
       name: "color",
-      choices: [
-        "black",
-        "purple",
-        "green"
-      ]
+      
+      
     },
     {
-      type: "list",
-      message: "What color would you like for shadows??",
+      type: "input",
+      message: "What your second favorite color",
       name: "shadow",
-      choices: [
-        "black",
-        "blue",
-        "grey"
-      ]
+      
     },
   ])
 }
@@ -59,7 +52,7 @@ function generateHTML(answers, userData, gsData) {
         }
         h1, p, h2, h3{
           color: ${answers.color};
-            text-shadow:2px 2px 5px black;
+           
         }
     </style>
     </head>
@@ -70,15 +63,15 @@ function generateHTML(answers, userData, gsData) {
             <h1 class="display-4">${userData.githubName}</h1>
             <p class="lead">I'm from ${userData.githubLocation}.</p>
             <h3 class="lead">${userData.githubBio}</h3>
-            <h2 class="lead">Number of github repos: ${userData.githubRepos}</h2>
-            <h2 class="lead">Number of github followers: ${userData.githubFollowers}</h2>
-            <h2 class="lead">Number of github following: ${gsData.following}</h2>
-            <h2 class="lead">Number of github stars: ${gsData.stars}</h2>
+            <h2 class="lead">Number of GitHub repos: ${userData.githubRepos}</h2>
+            <h2 class="lead">Number of GitHub followers: ${userData.githubFollowers}</h2>
+            <h2 class="lead">Number of GitHub following: ${gsData.following}</h2>
+            <h2 class="lead">Number of GitHub stars: ${gsData.stars}</h2>
             
             <hr class="my-4">
             <p>Here are the ways you can reach me.</p>
             <a class="btn btn-primary btn-lg" href="https://www.google.com/maps/place/${userData.githubLocation}/" role="button" target="blank">Location</a>
-            <a class="btn btn-primary btn-lg" href="${userData.githubURL}" role="button" target="blank">github</a>
+            <a class="btn btn-primary btn-lg" href="${userData.githubURL}" role="button" target="blank">GitHub</a>
             <a class="btn btn-primary btn-lg" href="${userData.githubBlog}" role="button" target="blank">Blog</a>
           </div>
     
@@ -90,4 +83,44 @@ function generateHTML(answers, userData, gsData) {
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     </body>
-    </html>`
+    </html>`;
+  }
+  function githubAxiosProfile(answers) {
+    const queryUrl = `https://api.github.com/users/${answers.username}`;
+    return axios.get(queryUrl)
+  }
+  async function pdfGen(html) {
+  
+    const options = { format: 'Letter', orientation: "portrait", };
+    pdf.create(html, options).toFile('./profile.pdf', function (err, res) {
+      if (err) return console.log(err);
+      console.log(res);
+    });
+  }
+  async function main() {
+    try {
+      const answers = await userInput()
+      const res = await githubAxiosProfile(answers)
+      var url = answers.username
+      const gsData= await gsPromise(url)
+      const userData = {
+        githubURL: res.data.html_url,
+        githubPic: res.data.avatar_url,
+        githubRepos: res.data.public_repos,
+        githubFollowers: res.data.followers,
+        githubLocation: res.data.location,
+        githubBlog: res.data.blog,
+        githubName: res.data.name,
+        githubBio: res.data.bio
+      }
+  
+  
+      const html = generateHTML(answers, userData, gsData)
+      writeFileAsync("index.html", html)
+      pdfGen(html)
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+  main()
