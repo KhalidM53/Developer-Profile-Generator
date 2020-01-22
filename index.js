@@ -91,10 +91,10 @@ function generateHTML(answers, userData, gsData) {
   }
   async function pdfGen(html) {
   
-    const options = { format: 'Letter', orientation: "portrait", };
+    const options = { format: 'A3', orientation: "portrait", };
     pdf.create(html, options).toFile('./profile.pdf', function (err, res) {
       if (err) return console.log(err);
-      console.log(res);
+      console.log(res);     
     });
   }
   async function main() {
